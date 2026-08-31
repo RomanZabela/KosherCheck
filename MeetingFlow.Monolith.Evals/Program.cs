@@ -5,19 +5,30 @@ using MeetingFlow.Monolith.Evals;
 using MeetingFlow.Monolith.Models;
 using MeetingFlow.Monolith.Services;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
 using OpenAI;
 
-var apiKey = Environment.GetEnvironmentVariable("KOSHER_EVAL_API_KEY");
+// appsettings.Local.json is optional and lets you set these without exporting shell
+// environment variables. A real environment variable of the same name always wins.
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(AppContext.BaseDirectory)
+    .AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: false)
+    .AddEnvironmentVariables()
+    .Build();
+
+var apiKey = configuration["KOSHER_EVAL_API_KEY"];
 if (string.IsNullOrWhiteSpace(apiKey))
 {
-    Console.Error.WriteLine("KOSHER_EVAL_API_KEY is not set. See README.md for the required environment variables.");
+    Console.Error.WriteLine(
+        "KOSHER_EVAL_API_KEY is not set. Set it as an environment variable, or add it to " +
+        "appsettings.Local.json next to this project. See README.md.");
     return 1;
 }
 
-var evaluatedModel = Environment.GetEnvironmentVariable("KOSHER_EVAL_MODEL") ?? "gpt-5-mini";
-var judgeModel = Environment.GetEnvironmentVariable("KOSHER_EVAL_JUDGE_MODEL") ?? "gpt-5";
-var endpoint = Environment.GetEnvironmentVariable("KOSHER_EVAL_ENDPOINT") ?? "https://api.openai.com/v1";
+var evaluatedModel = configuration["KOSHER_EVAL_MODEL"] ?? "gpt-5-mini";
+var judgeModel = configuration["KOSHER_EVAL_JUDGE_MODEL"] ?? "gpt-5";
+var endpoint = configuration["KOSHER_EVAL_ENDPOINT"] ?? "https://api.openai.com/v1";
 
 var serializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web)
 {

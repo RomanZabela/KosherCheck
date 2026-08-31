@@ -11,6 +11,7 @@ obj/
 ## Local secrets
 MeetingFlow.Monolith/appsettings.Development.json
 MeetingFlow.Monolith/appsettings.Local.json
+MeetingFlow.Monolith.Evals/appsettings.Local.json
 
 ## IDE
 .idea/
