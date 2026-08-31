@@ -1,0 +1,80 @@
+@page
+@model MeetingFlow.Monolith.Pages.KosherCheckModel
+@{
+    ViewData["Title"] = "Kosher Considerations";
+}
+
+<div class="kosher-page">
+    <header class="kosher-hero">
+        <p class="eyebrow">AI dish assessment</p>
+        <h1>Could this dish be kosher?</h1>
+        <p>
+            Add up to 10 dish descriptions. AI can flag potential kosher concerns from the
+            information provided, but it cannot certify kosher status.
+        </p>
+        <p class="kosher-disclaimer">
+            This is general educational information, not kosher certification or a halachic ruling.
+            For a practical decision, consult a trusted rabbi or kashrut authority.
+        </p>
+    </header>
+
+    <section class="card kosher-form-card" aria-labelledby="kosher-form-title">
+        <h2 id="kosher-form-title">Dishes to review</h2>
+        <form method="post" asp-page-handler="Check" id="kosher-check-form">
+            <div id="dish-fields">
+                <div class="dish-row">
+                    <div class="field dish-input">
+                        <label for="dish-1">Dish 1</label>
+                        <input id="dish-1"
+                               name="Dishes"
+                               type="text"
+                               maxlength="500"
+                               required
+                               autocomplete="off"
+                               placeholder="Example: beef burger with plant-based cheese" />
+                    </div>
+                    <button type="button"
+                            class="remove-dish"
+                            aria-label="Remove dish 1"
+                            hidden>
+                        Remove
+                    </button>
+                </div>
+            </div>
+
+            <div class="kosher-actions">
+                <button type="button" id="add-dish" class="secondary-button">Add dish</button>
+                <button type="submit" class="primary-button">Review kosher considerations</button>
+            </div>
+
+            <div id="kosher-loading" class="kosher-loading" role="status" aria-live="polite" hidden>
+                <span class="loading-spinner" aria-hidden="true"></span>
+                <span>Analyzing the dish descriptions and available information…</span>
+            </div>
+            <div id="kosher-error" class="error-box" role="alert" hidden></div>
+        </form>
+    </section>
+
+    <section id="kosher-results" aria-labelledby="kosher-results-title" hidden>
+        <h2 id="kosher-results-title">Assessment</h2>
+        <div class="table-scroll">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Dish</th>
+                        <th scope="col">Preliminary assessment</th>
+                        <th scope="col">Explanation</th>
+                    </tr>
+                </thead>
+                <tbody id="kosher-results-body"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="kosher-history" aria-labelledby="kosher-history-title" hidden>
+        <h2 id="kosher-history-title">Previous checks</h2>
+        <div id="kosher-history-list"></div>
+    </section>
+</div>
+
+<script src="~/js/kosher-check.js" asp-append-version="true"></script>
